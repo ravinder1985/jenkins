@@ -1,0 +1,12 @@
+---
+
+- name: STARTED INITIAL STEPS
+  debug: msg="INITIAL REPO AND KEY SETUP"
+#- name: WGET RPM
+#  shell: curl -o /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo 
+#- name: IMPORT KEY
+#  shell: rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+- name: GET RPM
+  get_url: url={{ jenkins.repo }} dest={{ jenkins.dest }}
+- name: IMPORT KEY
+  rpm_key:  state=present key={{ jenkins.key }} validate_certs=yes

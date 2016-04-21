@@ -1,0 +1,6 @@
+---
+
+- name: GET JAVA 8 RPM
+  get_url: url={{ java.rpm_url }} dest={{ java.dest }} headers='Cookie:gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie' validate_certs=False
+- name: INSTALL JAVA-8
+  yum: name={{ java.dest }}{{ java.jdk_rpm }} state=present

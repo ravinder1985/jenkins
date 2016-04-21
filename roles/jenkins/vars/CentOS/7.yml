@@ -1,0 +1,9 @@
+jenkins:
+  repo: http://pkg.jenkins-ci.org/redhat/jenkins.repo
+  serivce: jenkins
+  key: https://jenkins-ci.org/redhat/jenkins-ci.org.key
+  dest: /etc/yum.repos.d/jenkins.repo
+  mount: /jenkins
+  nfs_home: home
+  path: /var/lib
+  default_home: /var/lib/jenkins

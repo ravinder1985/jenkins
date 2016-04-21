@@ -1,0 +1,8 @@
+---
+
+- name: IP ADDRESS
+  debug: msg=" {{ ansible_default_ipv4.address }} List of plugins to install {{ plugins }}"
+- name: COPY GROOVY SCRIPT TO TMP
+  template: src=plugin.groovy dest=/tmp/plugin.groovy
+- name: INSTALL REQUIRED PLUGINS
+  shell: curl -d "script=$(</tmp/plugin.groovy)" http://{{ ansible_default_ipv4.address }}:8080/scriptText

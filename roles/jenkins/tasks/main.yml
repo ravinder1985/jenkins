@@ -1,0 +1,12 @@
+---
+
+- include_vars: "{{ ansible_distribution }}/{{ ansible_distribution_major_version }}.yml"
+- include: add_repo.yml
+  become: yes
+  become_method: sudo
+- include: jenkins.yml
+  become: yes
+  become_method: sudo
+- include: install_plugins.yml
+  become: yes
+  become_method: sudo
