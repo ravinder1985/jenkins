@@ -2,7 +2,18 @@
 
 - name: IP ADDRESS
   debug: msg=" {{ ansible_default_ipv4.address }} List of plugins to install {{ plugins }}"
-- name: COPY GROOVY SCRIPT TO TMP
+
+- name: COPY GROOVY SCRIPT TO TMP.
   template: src=plugin.groovy dest=/tmp/plugin.groovy
-- name: INSTALL REQUIRED PLUGINS
+
+- name: INSTALL REQUIRED PLUGINS WHEN SECURITY IS ENABLED.
+  shell: curl -u {{ user }}:{{ key }} -d "script=$(</tmp/plugin.groovy)" http://{{ ansible_default_ipv4.address }}:8080/scriptText
+  register: with_security
+  when: user is defined and key is defined
+
+- name: INSTALL REQUIRED PLUGINS WHEN SECURITY IS NOT ENABLED.
   shell: curl -d "script=$(</tmp/plugin.groovy)" http://{{ ansible_default_ipv4.address }}:8080/scriptText
+  register: without_security
+  when: user is not defined and key is not defined
+- debug: msg="{{ with_security }}"
+- debug: msg="{{ without_security }}"

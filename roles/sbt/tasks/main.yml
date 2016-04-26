@@ -1,0 +1,6 @@
+---
+# tasks file for sbt
+
+- include: sbt.yml
+  become: yes
+  become_method: sudo

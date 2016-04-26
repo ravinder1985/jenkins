@@ -1,0 +1,6 @@
+---
+# tasks file for java
+
+- include: java.yml
+  become: yes
+  become_method: sudo

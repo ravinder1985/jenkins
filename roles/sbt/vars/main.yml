@@ -1,0 +1,17 @@
+---
+# vars file for sbt
+
+version: V_11
+sbt:
+  rpm:
+    url: http://dl.bintray.com/sbt/rpm
+    name: sbt-0.13.9.rpm
+    version: 0.13.9
+  V_11:
+    zip_url: https://dl.bintray.com/sbt/native-packages/sbt/0.13.11/sbt-0.13.11.zip
+    zip_location: /opt
+    deployed_location: /usr/share
+    zip_name: sbt-0.13.11.zip
+    path: /usr/bin
+    binary: sbt/bin/sbt
+  dest: /tmp

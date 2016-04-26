@@ -30,5 +30,5 @@
    - name: CREATE LINK IN DEFAULT PATH TO POINT TO NFS MOUNT
      file: src={{ jenkins.mount }}/{{ jenkins.nfs_home }} dest={{ jenkins.default_home }} state=link owner=jenkins group=jenkins
   when: jenkins.mount is defined
-- name: ENSURE JENKINS RUNNING
+- name: ENSURE JENKINS RUNNING AND ENABLED
   service: name={{ jenkins.serivce }} state=started enabled=yes

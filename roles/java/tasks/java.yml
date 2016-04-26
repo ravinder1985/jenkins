@@ -1,0 +1,8 @@
+---
+
+- name: JAVA VERSION INFO.
+  debug: msg={{ version }}
+- name: GET JAVA RPM
+  get_url: url={{ java[version].rpm_url }} dest={{ java[version].dest }} headers='Cookie:gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie' validate_certs=False
+- name: INSTALL JAVA
+  yum: name={{ java[version].dest }}{{ java[version].jdk_rpm }} state=present

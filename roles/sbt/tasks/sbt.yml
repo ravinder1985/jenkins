@@ -1,0 +1,17 @@
+---
+
+#Install with ZIP.
+- name: GET SBT ZIP.
+  get_url: url={{ sbt[version].zip_url }} dest={{ sbt[version].zip_location }}
+
+- name: UNZIP AND COPY THE BINERY TO /usr/bin
+  unarchive: src={{ sbt[version].zip_location }}/{{ sbt[version].zip_name }} dest={{ sbt[version].deployed_location }}/ copy=no
+
+- name: CREATE LINK IN /usr/bin
+  file: src={{ sbt[version].deployed_location }}/{{ sbt[version].binary }} dest={{ sbt[version].path }}/sbt state=link
+
+#Install with RPM
+#- name: GET SBT RPM.
+#  get_url: url={{ sbt.rpm.url }}/{{ sbt.rpm.name }}  dest={{ sbt.dest }}
+#- name: INSTALL SBT.
+#  yum: name={{ sbt.dest }}/{{ sbt.rpm.name }} state=present

@@ -1,8 +1,9 @@
 ---
-# vars file for java-1.8.0
+# vars file for java
+version: 8
 java:
+ 8:
   jre_rpm: jre-8u60-linux-x64.rpm
   jdk_rpm: jdk-8u60-linux-x64.rpm
   rpm_url: http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jdk-8u60-linux-x64.rpm
-  version: 8
   dest: /tmp/
