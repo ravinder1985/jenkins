@@ -1,6 +1,7 @@
+version: 1
 jenkins:
   repo: http://pkg.jenkins-ci.org/redhat/jenkins.repo
-  serivce: jenkins
+  service: jenkins
   key_url: https://jenkins-ci.org/redhat/jenkins-ci.org.key
   key: jenkins-ci.org.key
   dest: /etc/yum.repos.d/jenkins.repo
@@ -8,3 +9,14 @@ jenkins:
   nfs_home: home
   path: /var/lib
   default_home: /var/lib/jenkins
+  user: jenkxcloud
+  access_key: ae25cd36e12830c27165f0c196a19e6177bec9a2
+  2:
+   repo: http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+   rpm: http://pkg.jenkins-ci.org/redhat/jenkins-2.0-1.1.noarch.rpm
+   rpm_name: jenkins-2.0-1.1.noarch.rpm
+   key: http://pkg.jenkins-ci.org/redhat-stable/jenkins-ci.org.key
+   dest: /etc/yum.repos.d/jenkins.repo
+   path: /var/lib
+   default_home: /var/lib/jenkins
+   service: jenkins

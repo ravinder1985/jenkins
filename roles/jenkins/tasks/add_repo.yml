@@ -1,22 +1,32 @@
 ---
 
-- name: STARTED INITIAL STEPS
-  debug: msg="INITIAL REPO AND KEY SETUP"
-- name: COPY KEY TO SERVER
-  template: src={{ jenkins.key }} dest=/tmp
+- block:
+   - name: STARTED INITIAL STEPS
+     debug: msg="INITIAL REPO AND KEY SETUP"
 
-#- name: WGET RPM
-#  shell: curl -o /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo 
-#- name: IMPORT KEY
-#  shell: rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+   - name: COPY KEY TO SERVER
+     template: src={{ jenkins.key }} dest=/tmp
 
-- name: GET RPM
-  get_url: url={{ jenkins.repo }} dest={{ jenkins.dest }}
+   - name: GET RPM
+     get_url: url={{ jenkins.repo }} dest={{ jenkins.dest }}
 
-# Get from URL
-#- name: IMPORT KEY
-#  rpm_key:  state=present key={{ jenkins.key_url }} validate_certs=yes
+   # Import locally
+   - name: IMPORT KEY
+     rpm_key: state=present key=/tmp/{{ jenkins.key }}
+  when: version == 1
 
-# Import locally
-- name: IMPORT KEY
-  rpm_key: state=present key=/tmp/{{ jenkins.key }}
+#Following steps to install jenkins 2
+
+- block:
+   #- name: WGET RPM
+   #  shell: curl -o /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+   #- name: IMPORT KEY
+   #  shell: rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+
+   - name: GET RPM
+     get_url: url={{ jenkins[version].rpm }} dest=/tmp/
+
+   # Get from URL
+   - name: IMPORT KEY
+     rpm_key:  state=present key={{ jenkins[version].key }} validate_certs=yes
+  when: version == 2

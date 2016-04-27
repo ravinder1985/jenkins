@@ -1,34 +1,70 @@
 ---
+- block:
+   - name: System Info
+     debug: msg="OS={{ ansible_distribution }} RELEASE={{ ansible_distribution_major_version }} First test"
 
-- name: System Info
-  debug: msg="OS={{ ansible_distribution }} RELEASE={{ ansible_distribution_major_version }} First test"
+   - name: INSTALL JENKINS
+     yum: name=jenkins state=present
 
-- name: INSTALL JENKINS
-  yum: name=jenkins state=present
+   - block:
+      - name: CHECK IF NFS MOUNT EXIST.
+        stat: path={{ jenkins.mount }}/{{ jenkins.nfs_home }}
+        register: result
+
+      - name: CHECK IF DEFAULT HOME IS DIR OR LINK
+        stat: path={{ jenkins.default_home }}
+        register: check_result
+
+      - debug: msg="{{ result }}"
+
+      - debug: msg="{{ check_result }}"
+
+      - name: MOVE DEFAULT HOME DIR TO NFS MOUNT
+        command: mv {{ jenkins.default_home }} {{ jenkins.mount }}/{{ jenkins.nfs_home }}
+        when: result.stat.isdir is not defined
+
+      - name: MOVE DEFAULT HOME TO BACKUP DIR SINCE NFS ALREADY HAS HOME AVAILABLE.
+        command: mv {{ jenkins.default_home }} {{ jenkins.path }}/{{ jenkins.service }}-bkp
+        when: check_result.stat.isdir and result.stat.isdir is defined
+
+      - name: CREATE LINK IN DEFAULT PATH TO POINT TO NFS MOUNT
+        file: src={{ jenkins.mount }}/{{ jenkins.nfs_home }} dest={{ jenkins.default_home }} state=link owner=jenkins group=jenkins
+     when: jenkins.mount is defined
+   - name: ENSURE JENKINS RUNNING AND ENABLED
+     service: name={{ jenkins.service }} state=started enabled=yes
+  when: version == 1
 
 - block:
-   - name: CHECK IF NFS MOUNT EXIST.
-     stat: path={{ jenkins.mount }}/{{ jenkins.nfs_home }}
-     register: result
+   - name: System Info
+     debug: msg="OS={{ ansible_distribution }} RELEASE={{ ansible_distribution_major_version }} First test"
 
-   - name: CHECK IF DEFAULT HOME IS DIR OR LINK
-     stat: path={{ jenkins.default_home }}
-     register: check_result
+   - name: INSTALL JENKINS
+     yum: name=/tmp/{{ jenkins[version].rpm_name }} state=present
 
-   - debug: msg="{{ result }}"
+   - block:
+      - name: CHECK IF NFS MOUNT EXIST.
+        stat: path={{ jenkins[version].mount }}/{{ jenkins[version].nfs_home }}
+        register: result
 
-   - debug: msg="{{ check_result }}"
+      - name: CHECK IF DEFAULT HOME IS DIR OR LINK
+        stat: path={{ jenkins[version].default_home }}
+        register: check_result
 
-   - name: MOVE DEFAULT HOME DIR TO NFS MOUNT
-     command: mv {{ jenkins.default_home }} {{ jenkins.mount }}/{{ jenkins.nfs_home }}
-     when: result.stat.isdir is not defined
+      - debug: msg="{{ result }}"
 
-   - name: MOVE DEFAULT HOME TO BACKUP DIR SINCE NFS ALREADY HAS HOME AVAILABLE.
-     command: mv {{ jenkins.default_home }} {{ jenkins.path }}/{{ jenkins.service }}-bkp
-     when: check_result.stat.isdir and result.stat.isdir is defined
+      - debug: msg="{{ check_result }}"
 
-   - name: CREATE LINK IN DEFAULT PATH TO POINT TO NFS MOUNT
-     file: src={{ jenkins.mount }}/{{ jenkins.nfs_home }} dest={{ jenkins.default_home }} state=link owner=jenkins group=jenkins
-  when: jenkins.mount is defined
-- name: ENSURE JENKINS RUNNING AND ENABLED
-  service: name={{ jenkins.serivce }} state=started enabled=yes
+      - name: MOVE DEFAULT HOME DIR TO NFS MOUNT
+        command: mv {{ jenkins[version].default_home }} {{ jenkins[version].mount }}/{{ jenkins[version].nfs_home }}
+        when: result.stat.isdir is not defined
+
+      - name: MOVE DEFAULT HOME TO BACKUP DIR SINCE NFS ALREADY HAS HOME AVAILABLE.
+        command: mv {{ jenkins[version].default_home }} {{ jenkins[version].path }}/{{ jenkins[version].service }}-bkp
+        when: check_result.stat.isdir and result.stat.isdir is defined
+
+      - name: CREATE LINK IN DEFAULT PATH TO POINT TO NFS MOUNT
+        file: src={{ jenkins[version].mount }}/{{ jenkins[version].nfs_home }} dest={{ jenkins[version].default_home }} state=link owner=jenkins group=jenkins
+     when: jenkins[version].mount is defined
+   - name: ENSURE JENKINS RUNNING AND ENABLED
+     service: name={{ jenkins[version].service }} state=started enabled=yes
+  when: version == 2

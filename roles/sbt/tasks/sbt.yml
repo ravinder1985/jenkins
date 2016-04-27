@@ -4,10 +4,10 @@
 - name: GET SBT ZIP.
   get_url: url={{ sbt[version].zip_url }} dest={{ sbt[version].zip_location }}
 
-- name: UNZIP AND COPY THE BINERY TO /usr/bin
+- name: UNZIP AND COPY THE BINERY TO /usr/share
   unarchive: src={{ sbt[version].zip_location }}/{{ sbt[version].zip_name }} dest={{ sbt[version].deployed_location }}/ copy=no
 
-- name: CREATE LINK IN /usr/bin
+- name: CREATE LINK IN /usr/bin POINT TO /usr/share/sbt/bin/sbt
   file: src={{ sbt[version].deployed_location }}/{{ sbt[version].binary }} dest={{ sbt[version].path }}/sbt state=link
 
 #Install with RPM
