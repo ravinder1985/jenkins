@@ -18,11 +18,6 @@
 #Following steps to install jenkins 2
 
 - block:
-   #- name: WGET RPM
-   #  shell: curl -o /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
-   #- name: IMPORT KEY
-   #  shell: rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
-
    - name: GET RPM
      get_url: url={{ jenkins[version].rpm }} dest=/tmp/
 
